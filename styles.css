@@ -1,0 +1,304 @@
+/* Reset default styles for consistency */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Base styles for the body */
+  body {
+    font-family: 'Baloo 2', sans-serif; /* Use Baloo 2 font */
+    background: transparent; /* Transparent background for glassmorphic effect */
+    user-select: none; /* Prevent text selection */
+  }
+  
+  /* Main container for the app (350x450px widget, draggable, persistent glowing border) */
+  .container {
+    width: 350px;
+    height: 450px;
+    background: url('assets/background.png'); /* Wallpaper without gradient overlay */
+    background-size: cover; /* Cover the container with the background image */
+    background-position: center; /* Center the background image */
+    backdrop-filter: blur(15px); /* Glassmorphic blur effect */
+    border-radius: 36px; /* Rounded corners for the container */
+    border: 2px solid rgba(255, 107, 114, 0.5); /* Persistent coral glowing border */
+    box-shadow: 0 10px 30px rgba(255, 107, 114, 0.3), 0 0 20px rgba(147, 197, 253, 0.2); /* Outer glow and shadow */
+    display: flex;
+    flex-direction: column;
+    padding: 20px; /* Inner padding */
+    overflow: hidden; /* Prevent content overflow */
+    position: relative; /* Positioning context for absolute children (timer, buttons) */
+    -webkit-app-region: drag; /* Enable dragging the window */
+    animation: shimmer 2s infinite; /* Continuous shimmering border glow */
+  }
+  
+  /* Top bar with logo, About Creator button, and close button (glassmorphic pill) */
+  .top-bar {
+    width: 310px; /* Slightly narrower than container for padding */
+    height: 40px; /* Fixed height for pill shape */
+    background: rgba(255, 255, 255, 0.15); /* Semi-transparent glassmorphic background */
+    backdrop-filter: blur(12px); /* Strong blur for frosted glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle white border */
+    border-radius: 24px; /* Pill-shaped rounded edges */
+    display: flex;
+    align-items: center; /* Vertically align items */
+    margin: 0 auto 20px; /* Center horizontally, space below */
+    padding: 0 8px; /* Reduced padding to fit larger About button */
+    gap: 8px; /* Space between logo, about button, and close button */
+  }
+  
+  /* Logo container (icon and text) */
+  .logo {
+    display: flex;
+    align-items: center; /* Center icon and text vertically */
+    gap: 8px; /* Space between icon and text */
+    flex-shrink: 0; /* Prevent logo from shrinking */
+  }
+  
+  /* Logo icon (clock) */
+  .logo-icon {
+    width: 20px; /* Slightly smaller to fit pill */
+    height: 20px;
+    filter: drop-shadow(0 0 5px rgba(255, 107, 114, 0.5)); /* Coral glow */
+  }
+  
+  /* App title in top bar */
+  .top-bar h1 {
+    font-size: 18px; /* Slightly smaller to fit pill */
+    font-weight: 600; /* Bold text */
+    color: #fff; /* White text */
+    text-shadow: 0 0 8px rgba(147, 197, 253, 0.5); /* Blue glow */
+  }
+  
+  /* About Creator button (matches top bar pill height) */
+  .about-btn {
+    background: rgba(255, 255, 255, 0.2); /* Glassmorphic background */
+    backdrop-filter: blur(10px); /* Blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle white border */
+    border-radius: 12px; /* Rounded for button */
+    color: #fff; /* White text */
+    font-size: 12px; /* Small text to fit */
+    font-weight: 600; /* Bold text */
+    width: 120px; /* Prominent width to match pill aesthetic */
+    height: 32px; /* Matches pill height minus padding */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center text */
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth hover and click */
+    -webkit-app-region: no-drag; /* Prevent dragging on button */
+    flex-grow: 1; /* Allow button to take available space */
+  }
+  
+  /* Hover effect for About Creator button */
+  .about-btn:hover {
+    transform: scale(1.05); /* Slight zoom */
+    box-shadow: 0 0 10px rgba(147, 197, 253, 0.6); /* Blue glow */
+  }
+  
+  /* Click effect for About Creator button */
+  .about-btn:active {
+    transform: scale(0.95); /* Subtle press effect */
+  }
+  
+  /* Close button (top right) */
+  .close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px; /* Adjusted for larger icon */
+    -webkit-app-region: no-drag; /* Prevent dragging on button */
+    flex-shrink: 0; /* Prevent close button from shrinking */
+  }
+  
+  /* Close button icon */
+  .close-btn .icon {
+    width: 24px; /* Larger to better match pill height */
+    height: 24px;
+  }
+  
+  /* Hover effect for close button */
+  .close-btn:hover {
+    transform: scale(1.1); /* Slight zoom */
+    filter: drop-shadow(0 0 10px rgba(255, 107, 114, 0.8)); /* Stronger coral glow */
+  }
+  
+  /* Timer display in a glassmorphic rectangle (center, hidden initially) */
+  .timer-display.glass-rectangle {
+    width: 260px; /* Wide width */
+    height: 160px; /* Slightly shorter height */
+    background: rgba(255, 255, 255, 0.15); /* Semi-transparent glassmorphic background */
+    backdrop-filter: blur(12px); /* Strong blur for frosted glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle white border */
+    border-radius: 18px; /* Rounded edges for clear rectangular shape */
+    display: flex;
+    flex-direction: column; /* Stack time and controls */
+    align-items: center; /* Center contents horizontally */
+    position: absolute; /* Position independently */
+    top: 80px; /* Below top bar */
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.5s ease-in-out; /* Fade animation */
+  }
+  
+  /* Show timer display with fade-in */
+  .timer-display.glass-rectangle.visible {
+    opacity: 1; /* Fully visible */
+  }
+  
+  /* Time remaining text (MM:SS, displayed directly in glass rectangle) */
+  .time-remaining {
+    font-size: 32px;
+    font-weight: 600; /* Bold text */
+    color: #fff; /* White text */
+    text-shadow: 0 0 10px rgba(255, 107, 114, 0.5); /* Coral glow */
+    transition: color 0.3s; /* Smooth color change */
+    margin-top: 20px; /* Position near top of glass rectangle */
+  }
+  
+  /* Running state for time text */
+  .timer-running .time-remaining {
+    color: #ff6b6b; /* Coral when timer is running */
+  }
+  
+  /* Timer control buttons (start/pause, cancel) */
+  .timer-controls {
+    display: flex;
+    gap: 12px; /* Space between buttons */
+    margin-top: 15px; /* Adjusted to fit wider pill buttons in shorter rectangle */
+  }
+  
+  /* General styles for control buttons (pill-shaped, text-based) */
+  .control-btn {
+    width: 80px; /* Wider for pill shape */
+    height: 40px; /* Matches top bar pill height */
+    background: rgba(255, 255, 255, 0.2); /* Glassmorphic background */
+    backdrop-filter: blur(10px); /* Blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle white border */
+    border-radius: 24px; /* Pill-shaped */
+    color: #fff; /* White text */
+    font-size: 14px; /* Text size */
+    font-weight: 600; /* Bold text */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center text */
+    transition: transform 0.3s, opacity 0.2s; /* Smooth hover and click transitions */
+    -webkit-app-region: no-drag; /* Prevent dragging on button */
+  }
+  
+  /* Hover effect for control buttons */
+  .control-btn:hover {
+    transform: scale(1.05); /* Slight zoom */
+    box-shadow: 0 0 12px rgba(147, 197, 253, 0.6); /* Blue glow */
+  }
+  
+  /* Click effect for control buttons (minimal fade) */
+  .control-btn:active {
+    opacity: 0.7; /* Gentle fade */
+  }
+  
+  /* Preset timer buttons container (2x2 grid at bottom) */
+  .preset-timers {
+    display: grid;
+    grid-template-columns: repeat(2, 120px); /* Two 120px-wide columns */
+    grid-template-rows: repeat(2, 70px); /* Two 70px-tall rows */
+    gap: 20px; /* 20px spacing between buttons */
+    position: absolute; /* Fixed at bottom */
+    bottom: 20px; /* Distance from bottom edge */
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    width: 260px; /* 120px buttons + 20px gap */
+    height: 160px; /* 70px buttons + 20px gap */
+  }
+  
+  /* General styles for preset timer buttons with glassy fishy effect */
+  .preset-btn {
+    width: 120px; /* Rectangular width */
+    height: 70px; /* Rectangular height */
+    background: rgba(255, 255, 255, 0.15); /* Semi-transparent glassmorphic background */
+    backdrop-filter: blur(12px); /* Stronger blur for frosted glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle white border for definition */
+    border-radius: 18px; /* Rounded edges for rectangular shape */
+    color: #fff; /* White text */
+    font-size: 14px; /* Text size */
+    font-weight: 600; /* Bold text */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center text */
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth hover and click transitions */
+    animation: shimmer-fish 4s infinite; /* Fishy shimmer effect */
+    -webkit-app-region: no-drag; /* Prevent dragging on button */
+  }
+  
+  /* Hover effect for preset buttons */
+  .preset-btn:hover {
+    transform: scale(1.1); /* Slight zoom */
+    box-shadow: 0 0 15px rgba(255, 107, 114, 0.6); /* Coral glow */
+  }
+  
+  /* Click effect for preset buttons (minimal scale) */
+  .preset-btn:active {
+    transform: scale(0.95); /* Subtle press effect */
+  }
+  
+  /* Highlight active preset button */
+  .preset-btn.active {
+    box-shadow: 0 0 20px rgba(255, 107, 114, 0.8); /* Stronger coral glow */
+  }
+  
+  /* 1-minute preset button (top left, coral with fishy shimmer) */
+  .one-min {
+    grid-column: 1;
+    grid-row: 1;
+    background: linear-gradient(45deg, #ff6b6b, #ff9e9e, rgba(255, 255, 255, 0.2)); /* Coral with glass effect */
+    background-size: 200% 200%; /* For shimmer animation */
+  }
+  
+  /* 30-minute preset button (bottom left, orange with fishy shimmer) */
+  .thirty-min {
+    grid-column: 1;
+    grid-row: 2;
+    background: linear-gradient(45deg, #fb923c, #fed7aa, rgba(255, 255, 255, 0.2)); /* Orange with glass effect */
+    background-size: 200% 200%; /* For shimmer animation */
+  }
+  
+  /* 15-minute preset button (top right, lilac with fishy shimmer) */
+  .fifteen-min {
+    grid-column: 2;
+    grid-row: 1;
+    background: linear-gradient(45deg, #c084fc, #e0b7ff, rgba(255, 255, 255, 0.2)); /* Lilac with glass effect */
+    background-size: 200% 200%; /* For shimmer animation */
+  }
+  
+  /* 60-minute preset button (bottom right, teal with fishy shimmer) */
+  .sixty-min {
+    grid-column: 2;
+    grid-row: 2;
+    background: linear-gradient(45deg, #2dd4bf, #99f6e4, rgba(255, 255, 255, 0.2)); /* Teal with glass effect */
+    background-size: 200% 200%; /* For shimmer animation */
+  }
+  
+  /* Animations */
+  
+  /* Shimmer effect for container border (continuous glow) */
+  @keyframes shimmer {
+    0% { border-color: rgba(255, 107, 114, 0.5); }
+    50% { border-color: rgba(147, 197, 253, 0.5); }
+    100% { border-color: rgba(255, 107, 114, 0.5); }
+  }
+  
+  /* Fishy shimmer effect for preset buttons (aquatic reflection) */
+  @keyframes shimmer-fish {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Confetti animation for timer completion */
+  @keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
+  }

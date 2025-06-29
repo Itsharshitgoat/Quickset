@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Metadata and styles -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quickset</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Main container for the app -->
+  <div class="container">
+    <!-- Top bar with logo, About Creator button, and close button (glassmorphic pill) -->
+    <div class="top-bar">
+      <!-- Logo and app name -->
+      <div class="logo">
+        <img src="assets/clock-icon.png" alt="Clock" class="logo-icon">
+        <h1>Quickset</h1>
+      </div>
+      <!-- About Creator button linking to creator's website -->
+      <button class="about-btn">About Creator</button>
+      <!-- Close button to exit the app -->
+      <button class="close-btn">
+        <img src="assets/close-icon.png" alt="Close" class="icon">
+      </button>
+    </div>
+
+    <!-- Timer display in a glassmorphic rectangle (hidden initially, fades in when timer starts) -->
+    <div class="timer-display glass-rectangle">
+      <!-- Time remaining text (MM:SS, displayed directly without progress ring) -->
+      <span class="time-remaining">00:00</span>
+      <!-- Timer control buttons (start/pause, cancel) -->
+      <div class="timer-controls">
+        <!-- Start/pause button (toggles between Start and Pause text) -->
+        <button class="control-btn start-pause">Start</button>
+        <!-- Cancel button to reset and hide timer -->
+        <button class="control-btn cancel">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Preset timer buttons (1 min, 15 min, 30 min, 60 min) -->
+    <div class="preset-timers">
+      <!-- 1-minute preset button -->
+      <button class="preset-btn one-min" data-time="60">1 min</button>
+      <!-- 30-minute preset button -->
+      <button class="preset-btn thirty-min" data-time="1800">30 min</button>
+      <!-- 15-minute preset button -->
+      <button class="preset-btn fifteen-min" data-time="900">15 min</button>
+      <!-- 60-minute preset button -->
+      <button class="preset-btn sixty-min" data-time="3600">60 min</button>
+    </div>
+  </div>
+  <!-- JavaScript for app functionality -->
+  <script src="renderer.js"></script>
+</body>
+</html>
